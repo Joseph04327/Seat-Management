@@ -2,15 +2,36 @@
   <div class="container">
     <h1>Seat Management</h1>
 
+    <div class="mode-switch">
+      <label>
+        <input
+          type="radio"
+          value="assign"
+          v-model="mode"
+        />
+        指派人員
+      </label>
+
+      <label style="margin-left: 10px;">
+        <input
+          type="radio"
+          value="clear"
+          v-model="mode"
+        />
+        清空座位
+      </label>
+    </div>
     <div class="toolbar">
       <label for="employeeSelect">人員選擇:</label>
 
       <select
         id="employeeSelect"
         v-model="selectedEmployeeId"
+        :disabled="mode === 'clear'"
       >
-        <option value="">
-          -- 清除空位 --
+
+        <option disabled value="">
+          -- 請選擇員工 --
         </option>
 
         <option
@@ -61,7 +82,7 @@
 
       <template v-if="selectedEmployeeId">
         <div>
-          指定人員
+          指派人員
           <span class="highlight-employee">
             [員編:{{ selectedEmployeeId }}]
           </span>
@@ -74,7 +95,7 @@
 
       <template v-else>
         <div>
-          清除空位:
+          清空座位:
           <span class="highlight-seat">
             {{ selectedSeat.floorNo }}樓: 座位{{ selectedSeat.seatNo }}
           </span>
@@ -94,7 +115,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 
 import {
   getSeats,
@@ -106,6 +127,8 @@ import { getEmployees } from "./api/employeeApi";
 const seats = ref([]);
 
 const employees = ref([]);
+
+const mode = ref("assign");
 
 const selectedEmployeeId = ref("");
 
@@ -153,21 +176,14 @@ const groupedSeats = computed(() => {
 
 const selectSeat = (seat) => {
 
-  const assignMode =
-      selectedEmployeeId.value !== "";
+  if (mode.value === "assign") {
 
-  if (assignMode) {
+    if (!selectedEmployeeId.value) return;
+    if (seat.occupied) return;
 
-    if (seat.occupied) {
-      return;
-    }
+  } else if (mode.value === "clear") {
 
-  } else {
-
-    if (!seat.occupied) {
-      return;
-    }
-
+    if (!seat.occupied) return;
   }
 
   selectedSeatId.value = seat.seatId;
@@ -175,14 +191,19 @@ const selectSeat = (seat) => {
 
 const submitChange = async () => {
 
-  if (selectedSeatId.value == null) {
-    alert("Please select a seat");
+  if (!selectedSeatId.value) {
+    alert("請選擇座位");
     return;
   }
 
   try {
 
-    if (selectedEmployeeId.value) {
+    if (mode.value === "assign") {
+
+      if (!selectedEmployeeId.value) {
+        alert("請選擇員工");
+        return;
+      }
 
       await assignSeat(
         selectedEmployeeId.value,
@@ -191,27 +212,31 @@ const submitChange = async () => {
 
     } else {
 
-      await clearSeat(
-        selectedSeatId.value
-      );
-
+      await clearSeat(selectedSeatId.value);
     }
 
     selectedSeatId.value = null;
-
     await loadSeats();
 
-  } catch (error) {
-
-    console.error(error);
-
-    alert("Operation failed");
+  } catch (e) {
+    console.error(e);
+    alert("操作失敗");
   }
 };
 
 onMounted(() => {
   loadSeats();
   loadEmployees();
+});
+
+watch(mode, (newMode) => {
+
+  selectedSeatId.value = null;
+
+  if (newMode === "clear") {
+    selectedEmployeeId.value = "";
+  }
+
 });
 </script>
 
@@ -332,5 +357,10 @@ onMounted(() => {
   color: #2e7d32;
   font-weight: bold;
   font-size: 16px;
+}
+
+.mode-switch {
+  margin-bottom: 10px;
+  font-weight: bold;
 }
 </style>

@@ -108,6 +108,7 @@
     <button
       class="submit-button"
       @click="submitChange"
+      :disabled="!canSubmit"
     >
       送出
     </button>
@@ -238,6 +239,17 @@ watch(mode, (newMode) => {
   }
 
 });
+
+const canSubmit = computed(() => {
+
+  if (!selectedSeatId.value) return false;
+
+  if (mode.value === "assign" && !selectedEmployeeId.value) {
+    return false;
+  }
+
+  return true;
+});
 </script>
 
 <style scoped>
@@ -362,5 +374,10 @@ watch(mode, (newMode) => {
 .mode-switch {
   margin-bottom: 10px;
   font-weight: bold;
+}
+
+.submit-button:disabled {
+  background-color: #bdbdbd;
+  cursor: not-allowed;
 }
 </style>

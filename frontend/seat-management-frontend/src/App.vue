@@ -3,14 +3,14 @@
     <h1>Seat Management</h1>
 
     <div class="toolbar">
-      <label for="employeeSelect">Employee:</label>
+      <label for="employeeSelect">人員選擇:</label>
 
       <select
         id="employeeSelect"
         v-model="selectedEmployeeId"
       >
         <option value="">
-          -- Clear Mode --
+          -- 清除空位 --
         </option>
 
         <option
@@ -55,11 +55,41 @@
         </div>
       </div>
     </div>
-    <div class="toolbar">
-      <button @click="submitChange">
-        送出
-      </button>
-    </div>
+    <div class="pending-action">
+
+    <template v-if="selectedSeat">
+
+      <template v-if="selectedEmployeeId">
+        <div>
+          指定人員
+          <span class="highlight-employee">
+            [員編:{{ selectedEmployeeId }}]
+          </span>
+          到
+          <span class="highlight-seat">
+            {{ selectedSeat.floorNo }}樓: 座位{{ selectedSeat.seatNo }}
+          </span>
+        </div>
+      </template>
+
+      <template v-else>
+        <div>
+          清除空位:
+          <span class="highlight-seat">
+            {{ selectedSeat.floorNo }}樓: 座位{{ selectedSeat.seatNo }}
+          </span>
+        </div>
+      </template>
+
+    </template>
+
+  </div>
+    <button
+      class="submit-button"
+      @click="submitChange"
+    >
+      送出
+    </button>
   </div>
 </template>
 
@@ -80,6 +110,12 @@ const employees = ref([]);
 const selectedEmployeeId = ref("");
 
 const selectedSeatId = ref(null);
+
+const selectedSeat = computed(() => {
+  return seats.value.find(
+    seat => seat.seatId === selectedSeatId.value
+  );
+});
 
 const loadSeats = async () => {
   try {
@@ -249,5 +285,52 @@ onMounted(() => {
 
 .seat:hover {
   opacity: 0.85;
+}
+
+.submit-button {
+  background-color: #1976d2;
+
+  color: white;
+
+  border: none;
+
+  border-radius: 6px;
+
+  padding: 8px 16px;
+
+  cursor: pointer;
+
+  font-weight: bold;
+}
+
+.submit-button:hover {
+  background-color: #1565c0;
+}
+
+.pending-action {
+  height: 30px;
+  width: 1210px;
+  margin-bottom: 20px;
+
+  padding: 10px;
+  border-radius: 6px;
+  background-color: #f5f5f5;
+
+  font-weight: bold;
+
+  display: flex;
+  align-items: center;
+}
+
+.highlight-employee {
+  color: #1976d2;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+.highlight-seat {
+  color: #2e7d32;
+  font-weight: bold;
+  font-size: 16px;
 }
 </style>

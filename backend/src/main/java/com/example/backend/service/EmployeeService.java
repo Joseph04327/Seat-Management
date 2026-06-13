@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import com.example.backend.dto.EmployeeResponse;
 import com.example.backend.entity.Employee;
 import com.example.backend.entity.Seat;
 import com.example.backend.repository.EmployeeRepository;
@@ -8,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -33,5 +36,25 @@ public class EmployeeService {
         employee.setSeat(seat);
 
         employeeRepository.save(employee);
+    }
+
+    public List<EmployeeResponse> getAllEmployees() {
+
+        List<Employee> employees = employeeRepository.findAll();
+
+        List<EmployeeResponse> result = new ArrayList<>();
+
+        for (Employee employee : employees) {
+
+            EmployeeResponse response = new EmployeeResponse();
+
+            response.setEmployeeId(employee.getEmployeeId());
+
+            response.setName(employee.getName());
+
+            result.add(response);
+        }
+
+        return result;
     }
 }

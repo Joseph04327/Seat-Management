@@ -12,7 +12,8 @@ public class Seat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long floorSeatSeq;
+    private Long id;
+    private String floorSeatSeq;
 
     private String floorNo;
     private String seatNo;

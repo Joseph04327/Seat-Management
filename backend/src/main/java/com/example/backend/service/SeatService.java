@@ -23,7 +23,7 @@ public class SeatService {
 
         List<Employee> employees = employeeRepository.findBySeatIsNotNull();
 
-        Map<Long, Employee> employeeMap = new HashMap<>();
+        Map<String, Employee> employeeMap = new HashMap<>();
 
         for (Employee employee : employees) {
 

@@ -105,6 +105,21 @@
     </template>
 
   </div>
+    <div class="legend">
+
+      <div>
+        <span class="box gray"></span> 空位
+      </div>
+
+      <div>
+        <span class="box red"></span> 已佔用
+      </div>
+
+      <div>
+        <span class="box green"></span> 請選擇
+      </div>
+
+    </div>
     <button
       class="submit-button"
       @click="submitChange"
@@ -379,5 +394,42 @@ const canSubmit = computed(() => {
 .submit-button:disabled {
   background-color: #bdbdbd;
   cursor: not-allowed;
+}
+
+.legend {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  align-items: flex-start;
+
+  margin: 10px 0 20px 0;
+  font-size: 14px;
+}
+
+.box {
+  width: 40px;
+  height: 25px;
+  border-radius: 3px;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.gray {
+  background: #bdbdbd;
+}
+
+.red {
+  background: #ff0000;
+}
+
+.green {
+  background: #90ee90;
+}
+
+.legend > div {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
 }
 </style>

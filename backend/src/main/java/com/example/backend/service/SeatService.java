@@ -7,6 +7,8 @@ import com.example.backend.repository.EmployeeRepository;
 import com.example.backend.repository.SeatRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 
 @Service
@@ -53,5 +55,19 @@ public class SeatService {
             result.add(response);
         }
         return result;
+    }
+
+    @Transactional
+    public void clearSeat(Long seatId) {
+
+        Seat seat = seatRepository.findById(seatId).orElseThrow(() -> new RuntimeException("Seat not found"));
+
+        Optional<Employee> employee = employeeRepository.findBySeat(seat);
+
+        if (employee.isPresent()) {
+            Employee e = employee.get();
+            e.setSeat(null);
+            employeeRepository.save(e);
+        }
     }
 }

@@ -1,15 +1,19 @@
 package com.example.backend.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "Seat")
 public class Seat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long floor_seat_seq;
+    private Long floorSeatSeq;
 
-    private String floor_no;
-    private String seat_no;
+    private String floorNo;
+    private String seatNo;
 }

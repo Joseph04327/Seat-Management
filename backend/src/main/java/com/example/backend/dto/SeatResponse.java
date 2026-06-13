@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SeatResponse {
-    private String seatId;
+    private Long seatId;
     private String floorNo;
     private String seatNo;
     private boolean occupied;

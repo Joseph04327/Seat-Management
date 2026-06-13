@@ -7,14 +7,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "Seat")
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"floor_no", "seat_no"})})
 public class Seat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String floorSeatSeq;
+    private Long floorSeatSeq;
 
+    @Column(name = "floor_no")
     private String floorNo;
+    @Column(name = "seat_no")
     private String seatNo;
 }

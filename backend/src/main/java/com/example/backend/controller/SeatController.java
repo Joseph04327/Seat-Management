@@ -1,6 +1,6 @@
 package com.example.backend.controller;
 
-import com.example.backend.entity.Seat;
+import com.example.backend.dto.SeatResponse;
 import com.example.backend.service.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +15,7 @@ public class SeatController {
     private SeatService seatService;
 
     @GetMapping
-    public List<Seat> getAllSeats() {
+    public List<SeatResponse> getAllSeats() {
         return seatService.getAllSeats();
     }
 }
